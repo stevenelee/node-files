@@ -13,23 +13,11 @@ async function cat(path) {
   try {
     contents = await fsP.readFile(path, "utf8");
   } catch (err) {
-    console.error(err);
+    console.error(`${err}`);
     process.exit(1);
   }
   console.log("file contents", contents);
 }
-
-const path = process.argv[2];
-
-// conditions for printing resp data to console:
-  // if file path, invoke cat();
-  // else, invoke webCat();
-if (path.includes("http")) {
-  webCat(path);
-} else {
-  cat(path);
-}
-
 
 /** make axios request, print to contents of response to console
  */
@@ -38,8 +26,15 @@ async function webCat(url) {
   try {
     resp = await axios.get(url);
   } catch (err) {
-    console.error(err);
+    console.error(`${err}`);
     process.exit(1);
   }
   console.log("response data", resp.data);
 }
+
+const path = process.argv[2];
+
+// conditions for printing resp data to console:
+// if file path, invoke cat();
+// else, invoke webCat();
+path.includes("http") ? webCat(path) : cat(path);
